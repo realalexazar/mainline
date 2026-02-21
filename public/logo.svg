@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" fill="none">
+  <rect x="0" y="0" width="60" height="60" rx="30" fill="#FF9900"/>
+  <rect x="0" y="0" width="40" height="40" rx="0" fill="#FF9900"/>
+  <rect x="5" y="5" width="30" height="30" rx="0" fill="#000000"/>
+  <rect x="65" y="8" width="130" height="8" rx="4" fill="#FF9900"/>
+  <text x="65" y="48" font-family="monospace" font-size="18" font-weight="bold" fill="#FF9900" letter-spacing="2">MAINLINE HUB</text>
+</svg>
