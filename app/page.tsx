@@ -35,7 +35,7 @@ export default async function HomePage() {
           New drops weekly
         </div>
         <h1
-          className="text-[clamp(3.2rem,7.5vw,6.5rem)] font-light leading-[1.05] tracking-[-0.03em] max-w-[850px] opacity-0 animate-fade-up"
+          className="text-[clamp(3rem,7vw,5.8rem)] font-light leading-[1.05] tracking-[-0.03em] max-w-[820px] opacity-0 animate-fade-up"
           style={{ animationDelay: '0.4s' }}
         >
           Good stuff.<br />
