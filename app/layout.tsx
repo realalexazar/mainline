@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { DM_Sans, Space_Mono } from 'next/font/google';
+import { DM_Sans, Darker_Grotesque, Epilogue, Azeret_Mono } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -10,10 +10,23 @@ const dmSans = DM_Sans({
   weight: ['300', '400', '500', '700'],
 });
 
-const spaceMono = Space_Mono({
+const darkerGrotesque = Darker_Grotesque({
+  subsets: ['latin'],
+  variable: '--font-headline',
+  weight: ['400', '500', '600'],
+});
+
+const epilogue = Epilogue({
+  subsets: ['latin'],
+  variable: '--font-headline-alt',
+  weight: ['300', '400'],
+  style: ['normal', 'italic'],
+});
+
+const azeretMono = Azeret_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
-  weight: ['400', '700'],
+  weight: ['400', '500', '700'],
 });
 
 export const metadata: Metadata = {
@@ -38,7 +51,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${spaceMono.variable}`}>
+    <html lang="en" className={`${dmSans.variable} ${darkerGrotesque.variable} ${epilogue.variable} ${azeretMono.variable}`}>
       <body className="font-body">
         <Navbar />
         <main>{children}</main>

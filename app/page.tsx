@@ -35,11 +35,11 @@ export default async function HomePage() {
           New drops weekly
         </div>
         <h1
-          className="text-[clamp(2.6rem,6vw,5rem)] font-light leading-[1.05] tracking-[-0.03em] max-w-[750px] opacity-0 animate-fade-up"
+          className="text-[clamp(2.6rem,6vw,5rem)] leading-[1.05] tracking-[-0.01em] max-w-[750px] opacity-0 animate-fade-up"
           style={{ animationDelay: '0.4s' }}
         >
-          Good stuff.<br />
-          <em className="italic text-text-mid">No theme required.</em>
+          <span className="font-headline font-normal">Good stuff.</span><br />
+          <span className="font-headline-alt font-light italic text-text-mid">No theme required.</span>
         </h1>
         <p
           className="mt-8 text-[1.05rem] md:text-[1.15rem] text-text-mid max-w-[500px] leading-relaxed opacity-0 animate-fade-up"

@@ -22,8 +22,10 @@ const config: Config = {
         sale: '#FF4444',
       },
       fontFamily: {
-        body: ['DM Sans', 'sans-serif'],
-        mono: ['Space Mono', 'monospace'],
+        body: ['var(--font-body)', 'DM Sans', 'sans-serif'],
+        headline: ['var(--font-headline)', 'Darker Grotesque', 'sans-serif'],
+        'headline-alt': ['var(--font-headline-alt)', 'Epilogue', 'sans-serif'],
+        mono: ['var(--font-mono)', 'Azeret Mono', 'monospace'],
       },
       maxWidth: {
         content: '1200px',
