@@ -2,15 +2,14 @@ export const dynamic = 'force-dynamic';
 
 import { supabaseAdmin } from '@/lib/supabase/server';
 import { Product } from '@/types';
-import { getStardate } from '@/lib/utils';
 import ProductGrid from '@/components/ProductGrid';
-import LCARSBar from '@/components/lcars/LCARSBar';
+import SectionHeader from '@/components/SectionHeader';
 import CategoryFilter from './CategoryFilter';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Product Catalog',
-  description: 'Browse the full Mainline Hub product catalog. Apparel, accessories, and more.',
+  title: 'Shop All',
+  description: 'Browse the full Mainline Hub catalog. Apparel, home goods, accessories, and more.',
 };
 
 interface ProductsPageProps {
@@ -53,8 +52,7 @@ async function getCategories(): Promise<string[]> {
     .eq('active', true);
 
   if (!data) return [];
-  const cats = Array.from(new Set(data.map((p: { category: string }) => p.category)));
-  return cats;
+  return Array.from(new Set(data.map((p: { category: string }) => p.category)));
 }
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
@@ -65,18 +63,16 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   ]);
 
   return (
-    <div className="space-y-6">
-      <LCARSBar color="amber">
-        Product Catalog &mdash; Stardate {getStardate()}
-      </LCARSBar>
-
-      <CategoryFilter
-        categories={categories}
-        currentCategory={category}
-        currentSort={sort}
-      />
-
-      <ProductGrid products={products} />
-    </div>
+    <>
+      <SectionHeader title="All Products" />
+      <div className="max-w-content mx-auto px-6 md:px-10 pb-6">
+        <CategoryFilter
+          categories={categories}
+          currentCategory={category}
+          currentSort={sort}
+        />
+      </div>
+      <ProductGrid products={products} columns={4} />
+    </>
   );
 }

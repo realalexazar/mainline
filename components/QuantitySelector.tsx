@@ -8,21 +8,21 @@ interface QuantitySelectorProps {
 
 export default function QuantitySelector({ quantity, onChange, max = 99 }: QuantitySelectorProps) {
   return (
-    <div className="flex items-center gap-0">
+    <div className="inline-flex items-center border border-border rounded-[4px]">
       <button
         onClick={() => onChange(Math.max(1, quantity - 1))}
         disabled={quantity <= 1}
-        className="bg-lcars-panel border border-lcars-amber/30 text-lcars-amber w-10 h-10 rounded-l-full font-mono text-lg hover:bg-lcars-amber hover:text-lcars-bg transition-colors disabled:opacity-30"
+        className="w-10 h-10 flex items-center justify-center text-text-mid hover:text-text transition-colors disabled:opacity-30 font-mono"
       >
-        -
+        −
       </button>
-      <div className="bg-lcars-panel border-y border-lcars-amber/30 h-10 w-14 flex items-center justify-center font-mono text-sm text-lcars-text">
+      <span className="w-12 h-10 flex items-center justify-center font-mono text-[0.85rem] border-x border-border">
         {quantity}
-      </div>
+      </span>
       <button
         onClick={() => onChange(Math.min(max, quantity + 1))}
         disabled={quantity >= max}
-        className="bg-lcars-panel border border-lcars-amber/30 text-lcars-amber w-10 h-10 rounded-r-full font-mono text-lg hover:bg-lcars-amber hover:text-lcars-bg transition-colors disabled:opacity-30"
+        className="w-10 h-10 flex items-center justify-center text-text-mid hover:text-text transition-colors disabled:opacity-30 font-mono"
       >
         +
       </button>

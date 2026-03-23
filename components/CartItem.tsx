@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { CartItem as CartItemType } from '@/types';
 import { formatPriceFromDecimal } from '@/lib/utils';
 import { useCartStore } from '@/stores/cart';
-import QuantitySelector from './QuantitySelector';
-import LCARSButton from './lcars/LCARSButton';
 
 interface CartItemProps {
   item: CartItemType;
@@ -16,53 +14,63 @@ export default function CartItemRow({ item }: CartItemProps) {
   const { updateQuantity, removeItem } = useCartStore();
 
   return (
-    <div className="flex gap-4 p-4 border border-lcars-panel rounded-tl-lcars-sm rounded-br-lcars-sm">
-      {/* Thumbnail */}
-      <div className="relative w-20 h-20 shrink-0 bg-lcars-panel rounded-lcars-sm overflow-hidden">
+    <div className="flex gap-4 p-4 bg-bg-card border border-border rounded-[4px]">
+      <div className="relative w-20 h-20 shrink-0 bg-[#1a1a1a] rounded-[4px] overflow-hidden border border-border">
         {item.image ? (
           <Image src={item.image} alt={item.name} fill className="object-cover" sizes="80px" />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="font-mono text-[8px] text-lcars-orange/40">N/A</span>
+            <span className="text-lg opacity-15">📦</span>
           </div>
         )}
       </div>
 
-      {/* Details */}
       <div className="flex-1 min-w-0">
         <Link
           href={`/products/${item.slug}`}
-          className="font-mono text-sm uppercase tracking-wider text-lcars-text hover:text-lcars-peach transition-colors truncate block"
+          className="text-[0.9rem] font-medium hover:text-accent transition-colors truncate block"
         >
           {item.name}
         </Link>
         {item.variant && (
-          <span className="font-mono text-xs text-lcars-light-blue uppercase">
+          <span className="font-mono text-[0.7rem] tracking-[0.1em] uppercase text-text-dim">
             {item.variant}
           </span>
         )}
-        <div className="mt-2 flex items-center gap-4">
-          <QuantitySelector
-            quantity={item.quantity}
-            onChange={(q) => updateQuantity(item.product_id, item.variant, q)}
-          />
-          <LCARSButton
-            color="red"
-            size="sm"
+        <div className="mt-3 flex items-center gap-3">
+          <div className="flex items-center border border-border rounded-[4px]">
+            <button
+              onClick={() => updateQuantity(item.product_id, item.variant, item.quantity - 1)}
+              disabled={item.quantity <= 1}
+              className="w-8 h-8 flex items-center justify-center text-text-mid hover:text-text transition-colors disabled:opacity-30"
+            >
+              −
+            </button>
+            <span className="w-8 h-8 flex items-center justify-center font-mono text-[0.8rem] border-x border-border">
+              {item.quantity}
+            </span>
+            <button
+              onClick={() => updateQuantity(item.product_id, item.variant, item.quantity + 1)}
+              className="w-8 h-8 flex items-center justify-center text-text-mid hover:text-text transition-colors"
+            >
+              +
+            </button>
+          </div>
+          <button
             onClick={() => removeItem(item.product_id, item.variant)}
+            className="font-mono text-[0.7rem] tracking-[0.1em] uppercase text-text-dim hover:text-sale transition-colors"
           >
-            REMOVE
-          </LCARSButton>
+            Remove
+          </button>
         </div>
       </div>
 
-      {/* Price */}
       <div className="text-right shrink-0">
-        <span className="font-mono text-sm text-lcars-peach">
+        <span className="font-mono text-[0.9rem]">
           {formatPriceFromDecimal(item.price * item.quantity)}
         </span>
         {item.quantity > 1 && (
-          <div className="font-mono text-[10px] text-lcars-orange/60">
+          <div className="font-mono text-[0.7rem] text-text-dim">
             {formatPriceFromDecimal(item.price)} each
           </div>
         )}

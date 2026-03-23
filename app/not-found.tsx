@@ -1,25 +1,20 @@
 import Link from 'next/link';
-import LCARSBar from '@/components/lcars/LCARSBar';
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center py-20 space-y-6">
-      <LCARSBar color="red" className="w-full max-w-md">
-        Error 404
-      </LCARSBar>
-      <div className="text-center space-y-3">
-        <h1 className="font-mono text-4xl text-lcars-red tracking-wider">
-          SECTOR NOT FOUND
-        </h1>
-        <p className="font-mono text-sm text-lcars-orange/60 uppercase tracking-wider">
-          The requested coordinates do not match any known location
-        </p>
+    <div className="max-w-content mx-auto px-6 md:px-10 pt-32 pb-20 text-center">
+      <div className="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-sale mb-4">
+        404
       </div>
+      <h1 className="text-3xl font-light mb-3">Page not found</h1>
+      <p className="text-text-mid mb-8">
+        The page you&apos;re looking for doesn&apos;t exist or has been moved.
+      </p>
       <Link
         href="/"
-        className="inline-block bg-lcars-amber text-lcars-bg font-mono text-sm uppercase tracking-widest px-8 py-3 rounded-full hover:brightness-110 transition-all"
+        className="inline-block font-mono text-[0.8rem] tracking-[0.1em] uppercase bg-accent text-bg px-8 py-4 rounded-[4px] hover:bg-white transition-all duration-200"
       >
-        Return to Hub
+        Back to Home
       </Link>
     </div>
   );

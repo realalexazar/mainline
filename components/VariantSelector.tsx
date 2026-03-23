@@ -1,6 +1,5 @@
 'use client';
 
-import { cn } from '@/lib/utils';
 import { ProductVariant } from '@/types';
 
 interface VariantSelectorProps {
@@ -16,7 +15,7 @@ export default function VariantSelector({ variants, selected, onSelect }: Varian
     <div className="space-y-3">
       {variants.map((variant) => (
         <div key={variant.name}>
-          <label className="block font-mono text-xs uppercase tracking-widest text-lcars-text-light mb-2">
+          <label className="block font-mono text-[0.7rem] tracking-[0.12em] uppercase text-text-dim mb-2">
             {variant.name}
           </label>
           <div className="flex flex-wrap gap-2">
@@ -24,12 +23,11 @@ export default function VariantSelector({ variants, selected, onSelect }: Varian
               <button
                 key={option}
                 onClick={() => onSelect(option)}
-                className={cn(
-                  'px-4 py-2 rounded-full font-mono text-xs uppercase tracking-wider transition-all',
+                className={`px-4 py-2 rounded-[4px] font-mono text-[0.75rem] tracking-[0.08em] uppercase transition-all duration-200 border ${
                   selected === option
-                    ? 'bg-lcars-amber text-lcars-bg'
-                    : 'bg-lcars-panel text-lcars-text border border-lcars-amber/30 hover:border-lcars-amber'
-                )}
+                    ? 'bg-accent text-bg border-accent'
+                    : 'bg-transparent text-text-mid border-border hover:border-border-hover'
+                }`}
               >
                 {option}
               </button>

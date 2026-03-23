@@ -1,59 +1,45 @@
-import LCARSBar from '@/components/lcars/LCARSBar';
-import LCARSPanel from '@/components/lcars/LCARSPanel';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Return Policy',
-};
+export const metadata: Metadata = { title: 'Return Policy' };
 
 export default function ReturnsPolicyPage() {
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      <LCARSBar color="pink">Return Policy</LCARSBar>
+    <div className="max-w-3xl mx-auto px-6 md:px-10 pt-32 pb-20">
+      <div className="font-mono text-[0.7rem] tracking-[0.15em] uppercase text-text-dim mb-4">Policy</div>
+      <h1 className="text-2xl font-light mb-8">Returns & Exchanges</h1>
 
-      <LCARSPanel color="pink" title="Returns & Exchanges">
-        <div className="space-y-4 font-sans text-sm text-lcars-text-light/80 leading-relaxed">
-          <p>
-            We want you to be completely satisfied with your purchase from Mainline Hub.
-            If you&apos;re not happy with your order, we&apos;re here to help.
-          </p>
+      <div className="space-y-6 text-[0.95rem] text-text-mid leading-relaxed">
+        <p>
+          We want you to be happy with your purchase. If something isn&apos;t right,
+          we&apos;re here to help.
+        </p>
 
-          <h3 className="font-mono text-xs uppercase tracking-widest text-lcars-amber mt-6">
-            Return Window
-          </h3>
-          <p>
-            You have 30 days from the date of delivery to initiate a return. Items must
-            be unused, unworn, and in their original packaging.
-          </p>
+        <h3 className="font-mono text-[0.7rem] tracking-[0.12em] uppercase text-text mt-8">Return Window</h3>
+        <p>
+          You have 30 days from delivery to initiate a return. Items must be unused,
+          unworn, and in original packaging.
+        </p>
 
-          <h3 className="font-mono text-xs uppercase tracking-widest text-lcars-amber mt-6">
-            Print-on-Demand Items
-          </h3>
-          <p>
-            Due to the custom nature of print-on-demand products, we can only accept returns
-            for items that arrive damaged or with printing defects. Please contact us with
-            photos of the defect within 7 days of receiving your order.
-          </p>
+        <h3 className="font-mono text-[0.7rem] tracking-[0.12em] uppercase text-text mt-8">Print-on-Demand Items</h3>
+        <p>
+          Due to the custom nature of POD products, we only accept returns for items
+          that arrive damaged or with printing defects. Contact us with photos within 7 days.
+        </p>
 
-          <h3 className="font-mono text-xs uppercase tracking-widest text-lcars-amber mt-6">
-            How to Return
-          </h3>
-          <ol className="list-decimal list-inside space-y-2 ml-2">
-            <li>Contact us at <span className="text-lcars-amber">support@mainlinehub.com</span> with your order number</li>
-            <li>We&apos;ll provide you with a return shipping label</li>
-            <li>Ship the item back in its original packaging</li>
-            <li>Refund will be processed within 5-7 business days of receiving the return</li>
-          </ol>
+        <h3 className="font-mono text-[0.7rem] tracking-[0.12em] uppercase text-text mt-8">How to Return</h3>
+        <ol className="list-decimal list-inside space-y-2 ml-2">
+          <li>Email <span className="text-accent">support@mainline-hub.com</span> with your order number</li>
+          <li>We&apos;ll send you a return shipping label</li>
+          <li>Ship the item back in its original packaging</li>
+          <li>Refund processed within 5–7 business days of receipt</li>
+        </ol>
 
-          <h3 className="font-mono text-xs uppercase tracking-widest text-lcars-amber mt-6">
-            Refunds
-          </h3>
-          <p>
-            Refunds will be issued to the original payment method. Shipping costs are
-            non-refundable unless the return is due to our error.
-          </p>
-        </div>
-      </LCARSPanel>
+        <h3 className="font-mono text-[0.7rem] tracking-[0.12em] uppercase text-text mt-8">Refunds</h3>
+        <p>
+          Refunds go to the original payment method. Shipping costs are non-refundable
+          unless the return is due to our error.
+        </p>
+      </div>
     </div>
   );
 }

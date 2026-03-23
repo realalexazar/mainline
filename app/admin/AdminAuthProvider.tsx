@@ -3,11 +3,8 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { getSupabaseBrowser } from '@/lib/supabase/client';
 import type { Session } from '@supabase/supabase-js';
-import LCARSInput from '@/components/lcars/LCARSInput';
-import LCARSButton from '@/components/lcars/LCARSButton';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
 
 const AuthContext = createContext<{ session: Session | null; token: string }>({
   session: null,
@@ -61,8 +58,8 @@ export default function AdminAuthProvider({ children }: { children: ReactNode })
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-lcars-bg flex items-center justify-center">
-        <span className="font-mono text-sm text-lcars-amber animate-lcars-pulse uppercase tracking-widest">
+      <div className="min-h-screen bg-bg flex items-center justify-center">
+        <span className="font-mono text-[0.8rem] text-text-mid uppercase tracking-widest">
           Authenticating...
         </span>
       </div>
@@ -71,47 +68,46 @@ export default function AdminAuthProvider({ children }: { children: ReactNode })
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-lcars-bg flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
-          <div className="border border-lcars-amber rounded-tl-lcars rounded-br-lcars overflow-hidden">
-            <div className="h-2 bg-lcars-red" />
-            <div className="p-8 space-y-6">
-              <div className="text-center">
-                <h1 className="font-mono text-xl text-lcars-amber uppercase tracking-widest">
-                  Admin Access
-                </h1>
-                <p className="font-mono text-xs text-lcars-orange/60 mt-1 uppercase">
-                  Authorization Required
-                </p>
-              </div>
-              <form onSubmit={handleLogin} className="space-y-4">
-                <LCARSInput
-                  id="email"
-                  label="Email"
+      <div className="min-h-screen bg-bg flex items-center justify-center p-4">
+        <div className="w-full max-w-md border border-border rounded-[4px] overflow-hidden">
+          <div className="p-8 space-y-6">
+            <div className="text-center">
+              <h1 className="font-mono text-[1rem] uppercase tracking-widest mb-1">Admin</h1>
+              <p className="text-[0.8rem] text-text-dim">Sign in to continue</p>
+            </div>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-1">
+                <label className="block font-mono text-[0.7rem] uppercase tracking-wider text-text-dim">Email</label>
+                <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@mainlinehub.com"
+                  className="w-full bg-bg-card border border-border rounded-[4px] px-4 py-2.5 text-[0.9rem] text-text placeholder:text-text-dim focus:outline-none focus:border-accent transition-colors"
+                  placeholder="admin@mainline-hub.com"
                   required
                 />
-                <LCARSInput
-                  id="password"
-                  label="Password"
+              </div>
+              <div className="space-y-1">
+                <label className="block font-mono text-[0.7rem] uppercase tracking-wider text-text-dim">Password</label>
+                <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-bg-card border border-border rounded-[4px] px-4 py-2.5 text-[0.9rem] text-text placeholder:text-text-dim focus:outline-none focus:border-accent transition-colors"
                   placeholder="••••••••"
                   required
                 />
-                {error && (
-                  <p className="font-mono text-xs text-lcars-red uppercase">{error}</p>
-                )}
-                <LCARSButton type="submit" color="amber" fullWidth>
-                  Authenticate
-                </LCARSButton>
-              </form>
-            </div>
-            <div className="h-2 bg-lcars-orange" />
+              </div>
+              {error && (
+                <p className="text-[0.8rem] text-sale">{error}</p>
+              )}
+              <button
+                type="submit"
+                className="w-full font-mono text-[0.8rem] tracking-[0.1em] uppercase bg-accent text-bg py-3 rounded-[4px] hover:bg-white transition-all"
+              >
+                Sign In
+              </button>
+            </form>
           </div>
         </div>
       </div>
@@ -120,39 +116,33 @@ export default function AdminAuthProvider({ children }: { children: ReactNode })
 
   return (
     <AuthContext.Provider value={{ session, token: session.access_token }}>
-      <div className="min-h-screen bg-lcars-bg text-lcars-text">
-        {/* Admin top bar */}
-        <div className="flex items-center gap-1">
-          <div className="bg-lcars-red h-10 w-32 rounded-br-lcars flex items-center justify-center">
-            <span className="font-mono text-xs text-white uppercase tracking-widest">Admin</span>
-          </div>
-          <div className="bg-lcars-orange h-7 flex-1 rounded-bl-lcars flex items-center px-6 gap-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  'font-mono text-xs uppercase tracking-wider',
-                  pathname === item.href ? 'text-lcars-bg' : 'text-lcars-bg/60 hover:text-lcars-bg'
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="flex-1" />
-            <Link href="/" className="font-mono text-xs text-white/60 uppercase hover:text-white">
-              Store →
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="font-mono text-xs text-lcars-bg/60 uppercase hover:text-lcars-bg"
+      <div className="min-h-screen bg-bg text-text">
+        <div className="flex items-center border-b border-border px-6 py-3 gap-6">
+          <span className="font-mono text-[0.8rem] font-bold tracking-[0.08em] uppercase text-sale">
+            Admin
+          </span>
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`font-mono text-[0.75rem] uppercase tracking-wider transition-colors ${
+                pathname === item.href ? 'text-text' : 'text-text-dim hover:text-text-mid'
+              }`}
             >
-              Logout
-            </button>
-          </div>
+              {item.label}
+            </Link>
+          ))}
+          <div className="flex-1" />
+          <Link href="/" className="text-[0.75rem] text-text-dim hover:text-text-mid transition-colors">
+            ← Store
+          </Link>
+          <button
+            onClick={handleLogout}
+            className="text-[0.75rem] text-text-dim hover:text-text-mid transition-colors"
+          >
+            Sign Out
+          </button>
         </div>
-
-        {/* Admin content */}
         <div className="p-6">{children}</div>
       </div>
     </AuthContext.Provider>

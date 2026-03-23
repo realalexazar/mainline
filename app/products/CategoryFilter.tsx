@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { cn } from '@/lib/utils';
 
 interface CategoryFilterProps {
   categories: string[];
@@ -31,15 +30,13 @@ export default function CategoryFilter({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      {/* Category pills */}
       <button
         onClick={() => navigate({ category: undefined })}
-        className={cn(
-          'rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-wider transition-all',
+        className={`px-4 py-1.5 font-mono text-[0.7rem] tracking-[0.1em] uppercase rounded-[4px] border transition-all duration-200 ${
           !currentCategory || currentCategory === 'all'
-            ? 'bg-lcars-amber text-lcars-bg'
-            : 'bg-lcars-panel text-lcars-text border border-lcars-amber/30 hover:border-lcars-amber'
-        )}
+            ? 'bg-accent text-bg border-accent'
+            : 'bg-transparent text-text-mid border-border hover:border-border-hover'
+        }`}
       >
         All
       </button>
@@ -47,21 +44,18 @@ export default function CategoryFilter({
         <button
           key={cat}
           onClick={() => navigate({ category: cat })}
-          className={cn(
-            'rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-wider transition-all',
+          className={`px-4 py-1.5 font-mono text-[0.7rem] tracking-[0.1em] uppercase rounded-[4px] border transition-all duration-200 ${
             currentCategory === cat
-              ? 'bg-lcars-amber text-lcars-bg'
-              : 'bg-lcars-panel text-lcars-text border border-lcars-amber/30 hover:border-lcars-amber'
-          )}
+              ? 'bg-accent text-bg border-accent'
+              : 'bg-transparent text-text-mid border-border hover:border-border-hover'
+          }`}
         >
           {cat}
         </button>
       ))}
 
-      {/* Sort divider */}
-      <div className="hidden md:block w-px h-6 bg-lcars-panel mx-2" />
+      <div className="hidden md:block w-px h-5 bg-border mx-2" />
 
-      {/* Sort pills */}
       {[
         { value: 'newest', label: 'Newest' },
         { value: 'price_asc', label: 'Price ↑' },
@@ -70,12 +64,11 @@ export default function CategoryFilter({
         <button
           key={opt.value}
           onClick={() => navigate({ sort: opt.value })}
-          className={cn(
-            'rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-wider transition-all',
+          className={`px-4 py-1.5 font-mono text-[0.7rem] tracking-[0.1em] uppercase rounded-[4px] border transition-all duration-200 ${
             currentSort === opt.value
-              ? 'bg-lcars-blue text-lcars-bg'
-              : 'bg-lcars-panel text-lcars-text border border-lcars-blue/30 hover:border-lcars-blue'
-          )}
+              ? 'bg-text text-bg border-text'
+              : 'bg-transparent text-text-dim border-border hover:border-border-hover'
+          }`}
         >
           {opt.label}
         </button>

@@ -3,9 +3,11 @@ export const dynamic = 'force-dynamic';
 import Link from 'next/link';
 import { supabaseAdmin } from '@/lib/supabase/server';
 import { Product } from '@/types';
-import { getStardate } from '@/lib/utils';
 import ProductGrid from '@/components/ProductGrid';
-import LCARSBar from '@/components/lcars/LCARSBar';
+import SectionHeader from '@/components/SectionHeader';
+import Ticker from '@/components/Ticker';
+import CategoryCard from '@/components/CategoryCard';
+import Banner from '@/components/Banner';
 
 async function getFeaturedProducts(): Promise<Product[]> {
   const { data, error } = await supabaseAdmin
@@ -19,102 +21,60 @@ async function getFeaturedProducts(): Promise<Product[]> {
   return data as Product[];
 }
 
-async function getProductCount(): Promise<number> {
-  const { count } = await supabaseAdmin
-    .from('products')
-    .select('*', { count: 'exact', head: true })
-    .eq('active', true);
-
-  return count || 0;
-}
-
 export default async function HomePage() {
-  const [featured, productCount] = await Promise.all([
-    getFeaturedProducts(),
-    getProductCount(),
-  ]);
-
-  const stardate = getStardate();
+  const featured = await getFeaturedProducts();
 
   return (
-    <div className="space-y-10">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden rounded-tl-lcars rounded-br-lcars border border-lcars-panel">
-        <div className="h-2 bg-lcars-amber" />
-        <div className="lcars-scanline p-8 md:p-16 text-center space-y-6">
-          <div className="space-y-2">
-            <h1 className="font-mono text-4xl md:text-6xl text-lcars-amber tracking-wider lcars-glow">
-              MAINLINE HUB
-            </h1>
-            <p className="font-mono text-sm md:text-base text-lcars-peach tracking-widest uppercase">
-              General Merchandise &mdash; All Sectors
-            </p>
-          </div>
-          <p className="font-sans text-lcars-text-light/70 max-w-xl mx-auto">
-            Your one-stop supply depot for apparel, accessories, and essentials.
-            Everything you need, delivered to your coordinates.
-          </p>
-          <Link
-            href="/products"
-            className="inline-block bg-lcars-amber text-lcars-bg font-mono text-sm uppercase tracking-widest px-8 py-3 rounded-full hover:brightness-110 transition-all"
-          >
-            Browse Catalog
-          </Link>
+    <>
+      {/* Hero */}
+      <section className="pt-44 md:pt-48 pb-20 md:pb-24 px-6 md:px-10 max-w-content mx-auto">
+        <div
+          className="font-mono text-[0.75rem] md:text-[0.8rem] tracking-[0.2em] uppercase text-accent mb-6 opacity-0 animate-fade-up"
+          style={{ animationDelay: '0.2s' }}
+        >
+          New drops weekly
         </div>
-        <div className="h-2 bg-lcars-orange" />
-      </section>
-
-      {/* Featured Products */}
-      {featured.length > 0 && (
-        <section className="space-y-4">
-          <LCARSBar color="blue">
-            Featured Products &mdash; Stardate {stardate}
-          </LCARSBar>
-          <ProductGrid products={featured} />
-        </section>
-      )}
-
-      {/* System Status */}
-      <section className="space-y-4">
-        <LCARSBar color="lavender">System Status</LCARSBar>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <StatusReadout label="PRODUCTS ONLINE" value={String(productCount)} />
-          <StatusReadout label="SECTORS ACTIVE" value="3" />
-          <StatusReadout label="HUB STATUS" value="OPERATIONAL" color="text-emerald-400" />
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="text-center py-8">
-        <p className="font-mono text-xs text-lcars-orange/60 uppercase tracking-widest mb-4">
-          New inventory arriving regularly — check back often
+        <h1
+          className="text-[clamp(3.2rem,7.5vw,6.5rem)] font-light leading-[1.05] tracking-[-0.03em] max-w-[850px] opacity-0 animate-fade-up"
+          style={{ animationDelay: '0.4s' }}
+        >
+          Good stuff.<br />
+          <em className="italic text-text-mid">No theme required.</em>
+        </h1>
+        <p
+          className="mt-8 text-[1.05rem] md:text-[1.15rem] text-text-mid max-w-[500px] leading-relaxed opacity-0 animate-fade-up"
+          style={{ animationDelay: '0.6s' }}
+        >
+          Apparel, home goods, accessories, art, and whatever else we think is worth
+          owning. Curated for people with taste and no patience for boring stores.
         </p>
         <Link
           href="/products"
-          className="inline-block bg-lcars-blue text-lcars-text-light font-mono text-sm uppercase tracking-widest px-8 py-3 rounded-full hover:brightness-110 transition-all"
+          className="group mt-10 inline-flex items-center gap-3 font-mono text-[0.85rem] tracking-[0.1em] uppercase bg-accent text-bg px-8 py-4 rounded-[4px] hover:bg-white transition-all duration-250 opacity-0 animate-fade-up"
+          style={{ animationDelay: '0.8s' }}
         >
-          Enter The Hub
+          Shop Everything
+          <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
         </Link>
       </section>
-    </div>
-  );
-}
 
-function StatusReadout({
-  label,
-  value,
-  color = 'text-lcars-amber',
-}: {
-  label: string;
-  value: string;
-  color?: string;
-}) {
-  return (
-    <div className="bg-lcars-panel border border-lcars-panel rounded-tl-lcars-sm rounded-br-lcars-sm p-4">
-      <div className="font-mono text-[10px] uppercase tracking-widest text-lcars-light-blue/60 mb-1">
-        {label}
+      {/* Ticker */}
+      <Ticker />
+
+      {/* Featured Products */}
+      <SectionHeader title="Featured" linkText="View All →" linkHref="/products" />
+      <ProductGrid products={featured} columns={4} />
+
+      {/* Categories */}
+      <SectionHeader title="Shop by Category" linkText="All Categories →" linkHref="/products" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border border border-border max-w-content mx-auto">
+        <CategoryCard icon="👕" name="Apparel" subtitle="Tees, hoodies, hats" href="/products?category=tees" />
+        <CategoryCard icon="🏠" name="Home + Goods" subtitle="Kitchen, mugs, decor" href="/products?category=home" />
+        <CategoryCard icon="🎨" name="Art + Prints" subtitle="Posters, stickers, patches" href="/products?category=accessories" />
       </div>
-      <div className={`font-mono text-2xl tracking-wider ${color}`}>{value}</div>
-    </div>
+
+      {/* Banner */}
+      <Banner />
+    </>
   );
 }

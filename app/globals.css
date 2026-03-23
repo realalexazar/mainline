@@ -2,59 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap');
 
 @layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
   body {
-    @apply bg-lcars-bg text-lcars-text;
+    @apply bg-bg text-text font-body antialiased;
+    overflow-x: hidden;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
   }
 
   ::selection {
-    @apply bg-lcars-amber/30 text-lcars-text-light;
+    @apply bg-accent/20 text-text;
   }
 
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-lcars-bg;
+    @apply bg-bg;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-lcars-orange/40 rounded-full;
+    @apply bg-border-hover rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-lcars-orange/60;
-  }
-}
-
-@layer components {
-  .lcars-scanline {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .lcars-scanline::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(34, 211, 238, 0.04) 2px,
-      rgba(34, 211, 238, 0.04) 4px
-    );
-    pointer-events: none;
-  }
-
-  .lcars-glow {
-    text-shadow: 0 0 10px rgba(34, 211, 238, 0.5), 0 0 30px rgba(34, 211, 238, 0.2);
+    @apply bg-text-dim;
   }
 }

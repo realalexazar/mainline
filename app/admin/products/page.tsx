@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { useAdminAuth } from '../AdminAuthProvider';
 import { Product } from '@/types';
 import { formatPriceFromDecimal } from '@/lib/utils';
-import LCARSBar from '@/components/lcars/LCARSBar';
-import LCARSButton from '@/components/lcars/LCARSButton';
 
 export default function AdminProductsPage() {
   const { token } = useAdminAuth();
@@ -14,110 +12,81 @@ export default function AdminProductsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetch_products() {
+    async function fetchProducts() {
       try {
         const res = await fetch('/api/admin/products', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
         if (Array.isArray(data)) setProducts(data);
-      } catch {
-        console.error('Failed to fetch products');
-      } finally {
-        setLoading(false);
-      }
+      } catch { /* ignore */ }
+      finally { setLoading(false); }
     }
-    if (token) fetch_products();
+    if (token) fetchProducts();
   }, [token]);
 
   const handleDelete = async (id: string) => {
     if (!confirm('Deactivate this product?')) return;
-
     await fetch(`/api/admin/products/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` },
     });
-
     setProducts((prev) => prev.filter((p) => p.id !== id));
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <LCARSBar color="amber" className="flex-1">
-          Products
-        </LCARSBar>
-        <Link href="/admin/products/new" className="ml-4">
-          <LCARSButton color="blue" size="sm">
-            + New Product
-          </LCARSButton>
+        <h1 className="font-mono text-[0.75rem] tracking-[0.15em] uppercase text-text-mid">Products</h1>
+        <Link
+          href="/admin/products/new"
+          className="font-mono text-[0.7rem] tracking-[0.1em] uppercase bg-accent text-bg px-4 py-2 rounded-[4px] hover:bg-white transition-all"
+        >
+          + New Product
         </Link>
       </div>
 
       {loading ? (
-        <div className="font-mono text-sm text-lcars-amber animate-lcars-pulse uppercase tracking-widest text-center py-10">
-          Loading...
-        </div>
+        <div className="text-center py-10 text-text-dim font-mono text-[0.8rem] uppercase">Loading...</div>
       ) : products.length === 0 ? (
-        <div className="text-center py-10 font-mono text-sm text-lcars-orange/60 uppercase">
-          No products found. Create your first product.
-        </div>
+        <div className="text-center py-10 text-text-dim text-[0.85rem]">No products yet.</div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-lcars-panel">
-                <th className="text-left font-mono text-xs uppercase tracking-widest text-lcars-orange/60 py-2 px-3">
-                  Name
-                </th>
-                <th className="text-left font-mono text-xs uppercase tracking-widest text-lcars-orange/60 py-2 px-3">
-                  Price
-                </th>
-                <th className="text-left font-mono text-xs uppercase tracking-widest text-lcars-orange/60 py-2 px-3">
-                  Category
-                </th>
-                <th className="text-left font-mono text-xs uppercase tracking-widest text-lcars-orange/60 py-2 px-3">
-                  Status
-                </th>
-                <th className="text-right font-mono text-xs uppercase tracking-widest text-lcars-orange/60 py-2 px-3">
-                  Actions
-                </th>
+              <tr className="border-b border-border">
+                {['Name', 'Price', 'Category', 'Status', 'Actions'].map((h) => (
+                  <th key={h} className="text-left font-mono text-[0.65rem] uppercase tracking-wider text-text-dim py-2 px-3">
+                    {h}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {products.map((product) => (
-                <tr key={product.id} className="border-b border-lcars-panel/50 hover:bg-lcars-panel/30">
+                <tr key={product.id} className="border-b border-border/50 hover:bg-bg-card/50">
                   <td className="py-3 px-3">
-                    <div className="font-mono text-sm text-lcars-text">{product.name}</div>
-                    <div className="font-mono text-[10px] text-lcars-orange/40">{product.slug}</div>
+                    <div className="text-[0.9rem]">{product.name}</div>
+                    <div className="text-[0.7rem] text-text-dim">{product.slug}</div>
                   </td>
-                  <td className="py-3 px-3 font-mono text-sm text-lcars-peach">
+                  <td className="py-3 px-3 font-mono text-[0.85rem]">
                     {formatPriceFromDecimal(product.price)}
                   </td>
-                  <td className="py-3 px-3 font-mono text-xs text-lcars-blue uppercase">
+                  <td className="py-3 px-3 font-mono text-[0.75rem] uppercase text-text-dim">
                     {product.category}
                   </td>
                   <td className="py-3 px-3">
-                    <span
-                      className={`font-mono text-xs uppercase ${
-                        product.active ? 'text-emerald-400' : 'text-lcars-red'
-                      }`}
-                    >
+                    <span className={`font-mono text-[0.7rem] uppercase ${product.active ? 'text-emerald-400' : 'text-sale'}`}>
                       {product.active ? 'Active' : 'Inactive'}
                     </span>
-                    {product.featured && (
-                      <span className="ml-2 font-mono text-[10px] text-lcars-tan uppercase">
-                        Featured
-                      </span>
-                    )}
                   </td>
-                  <td className="py-3 px-3 text-right space-x-2">
-                    <Link href={`/admin/products/${product.id}`}>
-                      <LCARSButton color="blue" size="sm">Edit</LCARSButton>
+                  <td className="py-3 px-3 space-x-2">
+                    <Link href={`/admin/products/${product.id}`} className="font-mono text-[0.7rem] text-text-mid hover:text-accent transition-colors">
+                      Edit
                     </Link>
-                    <LCARSButton color="red" size="sm" onClick={() => handleDelete(product.id)}>
+                    <button onClick={() => handleDelete(product.id)} className="font-mono text-[0.7rem] text-text-dim hover:text-sale transition-colors">
                       Delete
-                    </LCARSButton>
+                    </button>
                   </td>
                 </tr>
               ))}

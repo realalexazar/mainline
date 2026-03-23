@@ -1,29 +1,31 @@
 import type { Metadata } from 'next';
-import { Share_Tech_Mono, Inter } from 'next/font/google';
+import { DM_Sans, Space_Mono } from 'next/font/google';
 import './globals.css';
-import LCARSFrame from '@/components/lcars/LCARSFrame';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
-const shareTechMono = Share_Tech_Mono({
-  weight: '400',
+const dmSans = DM_Sans({
   subsets: ['latin'],
-  variable: '--font-mono',
+  variable: '--font-body',
+  weight: ['300', '400', '500', '700'],
 });
 
-const inter = Inter({
+const spaceMono = Space_Mono({
   subsets: ['latin'],
-  variable: '--font-sans',
+  variable: '--font-mono',
+  weight: ['400', '700'],
 });
 
 export const metadata: Metadata = {
   title: {
-    default: 'Mainline Hub — General Merchandise, All Sectors',
+    default: 'Mainline Hub — A Curated General Store',
     template: '%s | Mainline Hub',
   },
   description:
-    'Mainline Hub is your one-stop general merchandise store. Shop apparel, accessories, and more with the smoothest checkout in the quadrant.',
+    'Good stuff from everywhere, for everyone. Shop apparel, home goods, accessories, art, and more at Mainline Hub.',
   openGraph: {
     title: 'Mainline Hub',
-    description: 'General Merchandise — All Sectors',
+    description: 'A curated general store. Good stuff from everywhere, for everyone.',
     url: 'https://mainline-hub.com',
     siteName: 'Mainline Hub',
     type: 'website',
@@ -36,9 +38,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${shareTechMono.variable} ${inter.variable}`}>
-      <body className="font-sans antialiased">
-        <LCARSFrame>{children}</LCARSFrame>
+    <html lang="en" className={`${dmSans.variable} ${spaceMono.variable}`}>
+      <body className="font-body">
+        <Navbar />
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
