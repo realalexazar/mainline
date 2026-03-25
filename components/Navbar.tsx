@@ -20,8 +20,8 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 py-5 md:py-6 bg-bg/85 backdrop-blur-[20px] border-b border-border">
-      <Link href="/" className="font-mono font-bold text-[1.15rem] tracking-[0.08em] uppercase">
-        Mainline<span className="text-accent">Hub</span>
+      <Link href="/" className="font-headline font-semibold text-[1.2rem] tracking-[-0.02em] uppercase">
+        MAINLINE<span className="text-accent">HUB</span>
       </Link>
 
       <ul className="hidden md:flex gap-8 list-none">

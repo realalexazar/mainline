@@ -23,8 +23,8 @@ export default function Footer() {
     <footer className="border-t border-border max-w-content mx-auto px-6 md:px-10 py-12">
       <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-12">
         <div>
-          <div className="font-mono font-bold text-[1.1rem] tracking-[0.08em] uppercase mb-3">
-            Mainline<span className="text-accent">Hub</span>
+          <div className="font-headline font-semibold text-[1.2rem] tracking-[-0.02em] uppercase mb-3">
+            MAINLINE<span className="text-accent">HUB</span>
           </div>
           <p className="text-[0.85rem] text-text-dim max-w-[280px] leading-relaxed">
             A curated general store. Good stuff from everywhere, for everyone.
