@@ -39,7 +39,7 @@ export default async function HomePage() {
           style={{ animationDelay: '0.4s' }}
         >
           Good stuff.<br />
-          <span className="font-headline-alt font-light italic text-text-mid">No theme required.</span>
+          <span className="font-headline italic text-text-mid">No theme required.</span>
         </h1>
         <p
           className="mt-8 text-[1.05rem] md:text-[1.15rem] text-text-mid max-w-[500px] leading-relaxed opacity-0 animate-fade-up"
