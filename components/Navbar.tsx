@@ -19,8 +19,8 @@ export default function Navbar() {
   if (pathname?.startsWith('/admin')) return null;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 py-5 md:py-6 bg-bg/85 backdrop-blur-[20px] border-b border-border">
-      <Link href="/" className="font-headline font-semibold text-[1.2rem] tracking-[-0.02em] uppercase">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 py-3 md:py-4 bg-bg/85 backdrop-blur-[20px] border-b border-border">
+      <Link href="/" className="font-headline font-bold text-[1.35rem] tracking-[-0.02em] uppercase">
         MAINLINE<span className="text-accent">HUB</span>
       </Link>
 
