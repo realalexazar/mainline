@@ -27,7 +27,7 @@ export default async function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="pt-44 md:pt-48 pb-20 md:pb-24 px-6 md:px-10 max-w-content mx-auto">
+      <section className="pt-32 md:pt-36 pb-20 md:pb-24 px-6 md:px-10 max-w-content mx-auto">
         <div
           className="font-mono text-[0.75rem] md:text-[0.8rem] tracking-[0.2em] uppercase text-accent mb-6 opacity-0 animate-fade-up"
           style={{ animationDelay: '0.2s' }}
