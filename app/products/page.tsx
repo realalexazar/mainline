@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic';
 
-import { supabaseAdmin } from '@/lib/supabase/server';
+import { supabasePublic } from '@/lib/supabase/public';
 import { Product } from '@/types';
 import ProductGrid from '@/components/ProductGrid';
 import SectionHeader from '@/components/SectionHeader';
@@ -17,7 +17,7 @@ interface ProductsPageProps {
 }
 
 async function getProducts(category?: string, sort?: string): Promise<Product[]> {
-  let query = supabaseAdmin
+  let query = supabasePublic
     .from('products')
     .select('*')
     .eq('active', true);
@@ -46,7 +46,7 @@ async function getProducts(category?: string, sort?: string): Promise<Product[]>
 }
 
 async function getCategories(): Promise<string[]> {
-  const { data } = await supabaseAdmin
+  const { data } = await supabasePublic
     .from('products')
     .select('category')
     .eq('active', true);

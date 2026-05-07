@@ -1,16 +1,53 @@
 import { NextRequest, NextResponse } from 'next/server';
+import type Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase/server';
+import { checkRateLimit } from '@/lib/rate-limit';
 import { CheckoutRequest } from '@/types';
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+const MAX_QUANTITY_PER_LINE = 50;
+const MAX_LINES = 50;
+
 export async function POST(request: NextRequest) {
+  // 30 checkout starts per minute per IP - enough for a thrashy user,
+  // tight enough to slow card-testing bots.
+  const limit = checkRateLimit(request, {
+    windowMs: 60_000,
+    max: 30,
+    scope: 'checkout',
+  });
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: 'Too many requests, slow down.' },
+      { status: 429, headers: { 'Retry-After': Math.ceil(limit.retryAfterMs / 1000).toString() } }
+    );
+  }
+
   try {
     const body: CheckoutRequest = await request.json();
 
     if (!body.items || body.items.length === 0) {
       return NextResponse.json({ error: 'No items provided' }, { status: 400 });
     }
+    if (body.items.length > MAX_LINES) {
+      return NextResponse.json({ error: 'Too many line items' }, { status: 400 });
+    }
+    for (const item of body.items) {
+      if (
+        !item.product_id ||
+        typeof item.quantity !== 'number' ||
+        item.quantity < 1 ||
+        item.quantity > MAX_QUANTITY_PER_LINE
+      ) {
+        return NextResponse.json({ error: 'Invalid line item' }, { status: 400 });
+      }
+    }
 
+    // Re-fetch products from the DB. We never trust client-supplied
+    // prices: Stripe charges what we put in line_items below.
     const productIds = body.items.map((item) => item.product_id);
     const { data: products, error } = await supabaseAdmin
       .from('products')
@@ -24,10 +61,40 @@ export async function POST(request: NextRequest) {
 
     const productMap = new Map(products.map((p) => [p.id, p]));
 
-    const lineItems = body.items.map((item) => {
-      const product = productMap.get(item.product_id);
-      if (!product) throw new Error(`Product not found: ${item.product_id}`);
+    // Confirm every requested product exists + is active.
+    for (const item of body.items) {
+      if (!productMap.has(item.product_id)) {
+        return NextResponse.json(
+          { error: `Product unavailable: ${item.product_id}` },
+          { status: 400 }
+        );
+      }
+    }
 
+    // Soft inventory check. Final atomic decrement happens in the
+    // Stripe webhook on payment success.
+    const { data: hasStock, error: rpcError } = await supabaseAdmin.rpc(
+      'reserve_inventory',
+      {
+        items: body.items.map((i) => ({
+          product_id: i.product_id,
+          quantity: i.quantity,
+        })),
+      }
+    );
+    if (rpcError) {
+      console.error('[checkout] reserve_inventory failed:', rpcError);
+      return NextResponse.json({ error: 'Inventory check failed' }, { status: 500 });
+    }
+    if (hasStock === false) {
+      return NextResponse.json(
+        { error: 'One or more items are out of stock' },
+        { status: 409 }
+      );
+    }
+
+    const lineItems = body.items.map((item) => {
+      const product = productMap.get(item.product_id)!;
       const variantLabel = item.variant ? ` (${item.variant})` : '';
 
       return {
@@ -53,30 +120,29 @@ export async function POST(request: NextRequest) {
       0
     );
 
-    const shippingOptions = [
+    const shippingOptions: Stripe.Checkout.SessionCreateParams.ShippingOption[] = [
       {
         shipping_rate_data: {
-          type: 'fixed_amount' as const,
+          type: 'fixed_amount',
           fixed_amount: { amount: 499, currency: 'usd' },
           display_name: 'Standard Shipping',
           delivery_estimate: {
-            minimum: { unit: 'business_day' as const, value: 5 },
-            maximum: { unit: 'business_day' as const, value: 10 },
+            minimum: { unit: 'business_day', value: 5 },
+            maximum: { unit: 'business_day', value: 10 },
           },
         },
       },
     ];
 
-    // Free shipping for orders over $50
     if (subtotal >= 5000) {
       shippingOptions.unshift({
         shipping_rate_data: {
-          type: 'fixed_amount' as const,
+          type: 'fixed_amount',
           fixed_amount: { amount: 0, currency: 'usd' },
           display_name: 'Free Shipping (Orders over $50)',
           delivery_estimate: {
-            minimum: { unit: 'business_day' as const, value: 7 },
-            maximum: { unit: 'business_day' as const, value: 14 },
+            minimum: { unit: 'business_day', value: 7 },
+            maximum: { unit: 'business_day', value: 14 },
           },
         },
       });
@@ -106,7 +172,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url: session.url });
   } catch (err) {
-    console.error('Checkout error:', err);
+    console.error('[checkout] error:', err);
     return NextResponse.json(
       { error: 'Failed to create checkout session' },
       { status: 500 }

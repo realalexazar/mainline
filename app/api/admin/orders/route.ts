@@ -1,26 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/server';
-
-async function verifyAuth(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) return false;
-
-  const token = authHeader.split('Bearer ')[1];
-  const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
-
-  return !error && !!user;
-}
+import { requireAdmin } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
-  const isAuthed = await verifyAuth(request);
-  if (!isAuthed) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const auth = await requireAdmin(request);
+  if (!auth.ok) return auth.response;
 
-  const { data, error } = await supabaseAdmin
+  const { searchParams } = new URL(request.url);
+  const limit = Math.min(parseInt(searchParams.get('limit') || '100', 10), 500);
+  const status = searchParams.get('status');
+
+  let query = supabaseAdmin
     .from('orders')
     .select('*')
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  if (status) {
+    query = query.eq('status', status);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

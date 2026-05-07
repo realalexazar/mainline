@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 
 import Link from 'next/link';
-import { supabaseAdmin } from '@/lib/supabase/server';
+import { supabasePublic } from '@/lib/supabase/public';
 import { Product } from '@/types';
 import ProductGrid from '@/components/ProductGrid';
 import SectionHeader from '@/components/SectionHeader';
@@ -10,7 +10,7 @@ import CategoryCard from '@/components/CategoryCard';
 import Banner from '@/components/Banner';
 
 async function getFeaturedProducts(): Promise<Product[]> {
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await supabasePublic
     .from('products')
     .select('*')
     .eq('active', true)

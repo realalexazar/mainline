@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase/server';
+import { supabasePublic } from '@/lib/supabase/public';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const category = searchParams.get('category');
   const sort = searchParams.get('sort');
-  const limit = parseInt(searchParams.get('limit') || '50', 10);
+  const limit = Math.min(parseInt(searchParams.get('limit') || '50', 10), 100);
 
-  let query = supabaseAdmin
+  let query = supabasePublic
     .from('products')
     .select('*')
     .eq('active', true)

@@ -1,34 +1,44 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/server';
-
-async function verifyAuth(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) return false;
-
-  const token = authHeader.split('Bearer ')[1];
-  const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
-
-  return !error && !!user;
-}
+import { requireAdmin } from '@/lib/auth';
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const isAuthed = await verifyAuth(request);
-  if (!isAuthed) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const auth = await requireAdmin(request);
+  if (!auth.ok) return auth.response;
 
   try {
     const body = await request.json();
 
+    // Whitelist updatable fields - never let a client overwrite ids,
+    // timestamps, or arbitrary unknown columns.
+    const updates: Record<string, unknown> = {};
+    const allowed = [
+      'name',
+      'slug',
+      'description',
+      'price',
+      'compare_at_price',
+      'images',
+      'category',
+      'variants',
+      'printify_product_id',
+      'tiktok_shop_id',
+      'active',
+      'featured',
+      'inventory_count',
+      'metadata',
+    ] as const;
+    for (const key of allowed) {
+      if (key in body) updates[key] = body[key];
+    }
+    updates.updated_at = new Date().toISOString();
+
     const { data, error } = await supabaseAdmin
       .from('products')
-      .update({
-        ...body,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updates)
       .eq('id', params.id)
       .select()
       .single();
@@ -48,11 +58,10 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const isAuthed = await verifyAuth(request);
-  if (!isAuthed) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const auth = await requireAdmin(request);
+  if (!auth.ok) return auth.response;
 
+  // Soft delete: keep the row so historical orders still resolve names.
   const { error } = await supabaseAdmin
     .from('products')
     .update({ active: false, updated_at: new Date().toISOString() })

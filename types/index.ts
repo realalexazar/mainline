@@ -84,7 +84,14 @@ export interface Customer {
   created_at: string;
 }
 
-export type OrderStatus = 'pending' | 'paid' | 'fulfilled' | 'shipped' | 'delivered' | 'cancelled';
+export type OrderStatus =
+  | 'pending'
+  | 'paid'
+  | 'fulfilled'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled'
+  | 'requires_attention';
 export type FulfillmentStatus = 'unfulfilled' | 'processing' | 'fulfilled' | 'shipped';
 
 export interface CheckoutRequest {

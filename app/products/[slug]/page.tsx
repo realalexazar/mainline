@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic';
 
-import { supabaseAdmin } from '@/lib/supabase/server';
+import { supabasePublic } from '@/lib/supabase/public';
 import { Product } from '@/types';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -11,19 +11,19 @@ interface ProductPageProps {
 }
 
 async function getProduct(slug: string): Promise<Product | null> {
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await supabasePublic
     .from('products')
     .select('*')
     .eq('slug', slug)
     .eq('active', true)
-    .single();
+    .maybeSingle();
 
   if (error || !data) return null;
   return data as Product;
 }
 
 async function getRelatedProducts(product: Product): Promise<Product[]> {
-  const { data } = await supabaseAdmin
+  const { data } = await supabasePublic
     .from('products')
     .select('*')
     .eq('active', true)

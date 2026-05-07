@@ -1,22 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/server';
+import { requireAdmin } from '@/lib/auth';
 import { slugify } from '@/lib/utils';
 
-async function verifyAuth(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) return false;
-
-  const token = authHeader.split('Bearer ')[1];
-  const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
-
-  return !error && !!user;
-}
-
 export async function GET(request: NextRequest) {
-  const isAuthed = await verifyAuth(request);
-  if (!isAuthed) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const auth = await requireAdmin(request);
+  if (!auth.ok) return auth.response;
 
   const { data, error } = await supabaseAdmin
     .from('products')
@@ -31,13 +20,18 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const isAuthed = await verifyAuth(request);
-  if (!isAuthed) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const auth = await requireAdmin(request);
+  if (!auth.ok) return auth.response;
 
   try {
     const body = await request.json();
+
+    if (!body.name || typeof body.price !== 'number') {
+      return NextResponse.json(
+        { error: 'name and numeric price are required' },
+        { status: 400 }
+      );
+    }
 
     const slug = body.slug || slugify(body.name);
 
